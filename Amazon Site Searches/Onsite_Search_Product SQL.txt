@@ -1,0 +1,98 @@
+# ONSITE_SEARCH_PRODUCT_DEMAND_ANALYSIS_ON_RETAIL_SITES_AND_MARKETPLACES
+# SCHEMA:  DATAFEEDS
+# TABLE: ON_SITE_SEARCH
+# Database of search terms used on Amazon.com from 1/1/21 to 6/20/22
+# Number of Users, Number of visits
+# 7 million rows
+
+
+use role ACCOUNTADMIN;
+show databases;
+
+show global accounts;
+
+# Set schema
+use schema 
+ONSITE_SEARCH__PRODUCT_DEMAND_ANALYSIS_ON_RETAIL_SITES_AND_MARKETPLACES.datafeeds;
+
+# count number of rows
+select count(*)
+from on_site_search;
+
+# Search terms containing tablet.  Returns 16.8K rows
+select oss_keyword
+from on_site_search
+where oss_keyword like '%tablet%'
+
+# Look at search terms. 7.8 million rows
+select date, oss_keyword,
+sum(calibrated_users) as users,
+sum(calibrated_visits) as num_vistis
+from on_site_search
+group by date, oss_keyword
+order by date;
+,
+# number sites in table
+# Returns Amazon.com
+select distinct site_rule from on_site_search;
+
+# Rank top 10 search terms by date
+# List distinct search terms
+# Returns 294 rows
+# Extract to csv file.  Import into Google Sheets.
+# Categorized the 294 terms.  Create column keyword_category
+# Use amazon.com to help with categorization
+select distinct oss_keyword
+from (
+select date, oss_keyword, sum(calibrated_users) as users,
+rank() over (partition by date order by users desc) as rank
+from on_site_search
+group by date, oss_keyword
+order by date, users desc)
+where rank <= 10
+order by oss_keyword;
+
+# Extract csv file from Google Sheets
+# Create table with search term and category.
+# Import csv file
+
+create table workingtables.public.OSS_Category (
+oss_keyword varchar(250),
+keyword_category varchar(30)
+);
+
+# Display new table
+select * from workingtables.public.OSS_Category;
+
+# Delete columns heading in row 1
+Delete from workingtables.public.OSS_Category
+where OSS_Keyword = 'OSS_KEYWORD'
+
+# Display updated table
+select * from workingtables.public.OSS_Category;
+.
+# Rank search keywords by date
+# 5700 rows
+# Join search keyword table with keyword category table
+
+With CTE1 as (
+select *
+from (
+select date, oss_keyword, sum(calibrated_users) as users,
+sum(calibrated_visits) as site_visits,
+rank() over (partition by date order by users desc) as rank
+from on_site_search
+group by date, oss_keyword
+order by date, users desc)
+where rank <= 10
+order by date, rank
+)
+
+select a.*, b.keyword_category
+from CTE1 a
+join workingtables.public.OSS_Category b
+on trim(a.oss_keyword) = trim(b.oss_keyword)
+order by date, rank
+
+# Export results into csv file
+# 5.7K rows
