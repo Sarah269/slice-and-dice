@@ -20,14 +20,13 @@
 - Extracted the results to a csv file.  5702 rows.
 
 <b> On_site_search table.  Summarized users and visits by date, oss_keyword
--  ![On_site_Search table](https://github.com/Sarah269/slice-and-dice/blob/main/Amazon%20Site%20Searches/On_site_search.png)
+![On_site_Search table](https://github.com/Sarah269/slice-and-dice/blob/main/Amazon%20Site%20Searches/On_site_search.png)
 
-<b> New table with Google Sheets file containing keyword_category and oss_keyword columns. </b>
+<b> Google Sheets file containing keyword_category and oss_keyword columns. </b>
+![On_site_search Category](https://github.com/Sarah269/slice-and-dice/blob/main/Amazon%20Site%20Searches/On_site_search_categorization.png)
 
-
-
-<b> On_site_search table with new keyword_category column
-- ![On_site_search keyword and keyword_column](https://github.com/Sarah269/slice-and-dice/blob/main/Amazon%20Site%20Searches/On_site_with_category.png)
+<b> Extracted file. On_site_search table with new keyword_category column. Excluded Site and Country columns. </b>
+![On_site_search keyword and keyword_column](https://github.com/Sarah269/slice-and-dice/blob/main/Amazon%20Site%20Searches/On_site_with_category.png)
 
 
 
