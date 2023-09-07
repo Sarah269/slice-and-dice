@@ -1,0 +1,63 @@
+use role accountadmin;
+
+use schema CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN;
+
+-- returns 4M rows
+select * 
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT;
+
+
+--64 rows 2% null
+select state, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+group by state
+order by state;
+
+--9 rows 11% null
+select  company_response_to_consumer, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+group by company_response_to_consumer
+order by company_response_to_consumer;
+
+--110 rows
+select product, sub_product, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+group by product, sub_product
+order by product;
+
+--21 rows
+select product, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+group by product
+order by product;
+
+--12/1/2011 to 8/29/23
+select  date_received, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+group by date_received
+order by date_received;
+
+-- returns more than 684K rows
+select date_sent_to_company, date_received
+from CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+where date_sent_to_company <> date_received
+order by date_sent_to_company;
+
+-- returns more than 6K companies.  
+select distinct company
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT;
+
+--returns 481K rows
+select state,product, 
+company_response_to_consumer, 
+date_sent_to_company,
+issue,
+submitted_via, 
+timely_response, count(*)
+FROM CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_CFPB_COMPLAINT
+where date_received >= '2021-07-01' 
+group by state,product, company_response_to_consumer, 
+date_sent_to_company,
+issue,
+submitted_via, 
+timely_response
